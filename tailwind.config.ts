@@ -18,6 +18,7 @@ const config: Config = {
       'text': '#f7ebe8',
       'text-alt': '#1e1e24',
       'background': '#1e1e24',
+      'background-alt': '#29292f',
       'primary': '#e64c4c',
       'secondary': '#ffa785',
       'accent': '#CAA8F5',
