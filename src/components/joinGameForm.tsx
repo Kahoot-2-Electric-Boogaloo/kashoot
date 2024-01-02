@@ -7,6 +7,7 @@ export default function JoinGameForm() {
       <form className='grid grid-rows-2 gap-4 p-2 justify-center w-64 h-32 bg-background rounded-md'>
         <input
           type='text'
+          maxLength={8}
           placeholder='Game PIN'
           className='block text-center
             border-2
