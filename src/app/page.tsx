@@ -2,8 +2,8 @@ import JoinGameForm from "@/components/joinGameForm";
 
 export default function Home() {
   return (
-    <main>
-      <JoinGameForm />
+    <main style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "85vh" }}>
+        <JoinGameForm />
     </main>
   );
 }
