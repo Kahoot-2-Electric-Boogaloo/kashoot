@@ -1,4 +1,15 @@
+"use client";
+import { ChangeEvent, useState } from "react";
+
 export default function JoinGameForm() {
+  const [gamePin, setGamePin] = useState<string>();
+
+  const handleSubmit = async (e: ChangeEvent) => {
+    e.preventDefault();
+
+    console.log(gamePin);
+  };
+
   return (
     <div>
       <h1 className='w-64 select-none text-center font-extrabold text-6xl'>
@@ -6,6 +17,8 @@ export default function JoinGameForm() {
       </h1>
       <form className='grid grid-rows-2 gap-4 p-2 justify-center w-64 h-32 bg-background rounded-md'>
         <input
+          onChange={(e) => setGamePin(e.target.value)}
+          value={gamePin}
           type='text'
           maxLength={8}
           placeholder='Game PIN'
@@ -22,6 +35,8 @@ export default function JoinGameForm() {
             '
         />
         <button
+          value={"Enter"}
+          onClick={() => handleSubmit}
           className='bg-background-alt
             rounded-md
             outline-none
