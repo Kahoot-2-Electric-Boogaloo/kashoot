@@ -9,6 +9,7 @@ import { auth } from "@/firebase/config";
 
 interface User {
     // Define the properties of your user object
+    photoURL: any;
     displayName: string;
     // ... other properties
 }
@@ -30,6 +31,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
 
     const googleSignIn = () => {
         const provider = new GoogleAuthProvider();
+        provider.addScope('profile');
         signInWithPopup(auth, provider);
     };
 
