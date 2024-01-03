@@ -32,18 +32,16 @@ const Navbar = () => {
     }, [user]);
 
     return (
-        <div className="h-20 w-full border-b-2 flex items-center justify-between p-2">
+        <div className="bg-background h-20 w-full border-b-2 flex items-center justify-between p-2">
             <ul className="flex">
                 <li className="p-2 cursor-pointer">
-                    <Link href="/">Home</Link>
+                    <Link href="/"> <h1 className='font-extrabold'>
+                        Kashoot
+                    </h1></Link>
                 </li>
-                <li className="p-2 cursor-pointer">
-                    <Link href="/about">About</Link>
-                </li>
-
                 {!user ? null : (
                     <li className="p-2 cursor-pointer">
-                        <Link href="/profile">Profile</Link>
+                        <Link href="/ShooterPorfile">Profile</Link>
                     </li>
                 )}
             </ul>
@@ -51,10 +49,7 @@ const Navbar = () => {
             {loading ? null : !user ? (
                 <ul className="flex">
                     <li onClick={handleSignIn} className="p-2 cursor-pointer">
-                        Login
-                    </li>
-                    <li onClick={handleSignIn} className="p-2 cursor-pointer">
-                        Sign up
+                        Sign in with google
                     </li>
                 </ul>
             ) : (
