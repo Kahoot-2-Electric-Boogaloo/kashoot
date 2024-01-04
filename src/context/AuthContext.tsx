@@ -4,14 +4,14 @@ import {
     signOut,
     onAuthStateChanged,
     GoogleAuthProvider,
+    User as FirebaseAuthUser,
 } from "firebase/auth";
 import { auth } from "@/firebase/config";
 
-interface User {
-    // Define the properties of your user object
-    photoURL: any;
+interface User extends FirebaseAuthUser {
+    // Extend the FirebaseAuthUser interface with additional properties if needed
     displayName: string;
-    // ... other properties
+    photoURL: string;
 }
 
 interface AuthContextType {
@@ -41,8 +41,8 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ childr
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            // @ts-ignore
-            return setUser(currentUser);
+            // Cast currentUser to User
+            setUser(currentUser as User | null);
         });
         return () => unsubscribe();
     }, []);
