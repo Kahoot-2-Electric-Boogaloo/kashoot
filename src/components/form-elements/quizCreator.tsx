@@ -1,38 +1,73 @@
 "use client";
-import { useEffect, useState } from "react";
-import QuestionSelector from "./questions/questionSelector";
+import React, { useEffect, useState } from "react";
+import QuestionSelector, { DataWithIndex } from "./questions/questionSelector";
 import { TrueFalseQuestionData } from "./questions/trueFalseQuestion";
 import { MultipleChoiceQuestionData } from "./questions/multipleChoiceQuestion";
 import { TextInputQuestionData } from "./questions/textInputQuestion";
 
-export default function QuizCreator() {
-  const [qType, setQType] = useState<string>("");
-  const [qData, setQData] = useState({});
+interface QuizCreatorProps {}
+
+export default function QuizCreator(props: QuizCreatorProps) {
+  const [questions, setQuestions] = useState<
+    Array<
+      | (TrueFalseQuestionData & { id: string })
+      | (MultipleChoiceQuestionData & { id: string })
+      | (TextInputQuestionData & { id: string })
+    >
+  >([]);
 
   useEffect(() => {
-    console.log({ qType, qData });
-  }, [qType, qData]);
+    console.log({ questions });
+  }, [questions]);
 
-  const handleDataFromChild = (
-    newData:
-      | TrueFalseQuestionData
-      | MultipleChoiceQuestionData
-      | TextInputQuestionData
-      | {}
-  ) => {
-    if ("qType" in newData) {
-      setQType(newData.qType);
+  const handleDataFromChild = (newData: DataWithIndex) => {
+    if ("index" in newData && "data" in newData) {
+      const { index, data } = newData;
+      setQuestions((prevQuestions) => {
+        const updatedQuestions = [...prevQuestions];
+        updatedQuestions[index] = data as
+          | (TrueFalseQuestionData & { id: string })
+          | (MultipleChoiceQuestionData & { id: string })
+          | (TextInputQuestionData & { id: string });
+        return updatedQuestions;
+      });
     }
+  };
 
-    if ("qData" in newData) {
-      setQData(newData.qData);
-    }
+  const generateUniqueId = (): string => {
+    return `question_${new Date().getTime()}`;
+  };
+
+  const addQuestion = () => {
+    const newQuestion = {
+      id: generateUniqueId(),
+      qType: "",
+      qData: {},
+    } as TextInputQuestionData & { id: string };
+
+    setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+  };
+
+  const deleteQuestion = (index: number) => {
+    setQuestions((prevQuestions) =>
+      prevQuestions.filter((_, i) => i !== index)
+    );
   };
 
   return (
     <div className='flex flex-col items-center justify-center gap-4 w-4/12 min-h-screen bg-background rounded-md p-2'>
       <h1 className='font-extrabold text-6xl'>Create Quiz</h1>
-      <QuestionSelector onDataChange={handleDataFromChild} />
+      {questions.map((question, index) => (
+        <QuestionSelector
+          key={index}
+          index={index}
+          onDataChange={(newData) =>
+            handleDataFromChild({ index, data: newData })
+          }
+          onDelete={deleteQuestion}
+        />
+      ))}
+      <button onClick={addQuestion}>Add Question</button>
     </div>
   );
 }

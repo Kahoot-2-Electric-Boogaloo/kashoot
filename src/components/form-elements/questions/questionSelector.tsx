@@ -5,7 +5,17 @@ import MultipleChoiceQuestion, {
 } from "./multipleChoiceQuestion";
 import TextInputQuestion, { TextInputQuestionData } from "./textInputQuestion";
 
+export interface DataWithIndex {
+  index: number;
+  data:
+    | {}
+    | TrueFalseQuestionData
+    | MultipleChoiceQuestionData
+    | TextInputQuestionData;
+}
+
 interface QuizSelectorProps {
+  index: number;
   onDataChange: (
     data:
       | TrueFalseQuestionData
@@ -13,6 +23,7 @@ interface QuizSelectorProps {
       | TextInputQuestionData
       | {}
   ) => void;
+  onDelete: (index: number) => void; // Add onDelete prop
 }
 
 export default function QuizSelector(props: QuizSelectorProps) {
@@ -66,6 +77,10 @@ export default function QuizSelector(props: QuizSelectorProps) {
       ) : (
         <TextInputQuestion onDataChange={handleDataFromChild} />
       )}
+      {/* Add Delete button */}
+      <button onClick={() => props.onDelete(props.index)}>
+        Delete Question
+      </button>
     </div>
   );
 }
