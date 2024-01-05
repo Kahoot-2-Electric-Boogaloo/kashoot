@@ -1,9 +1,17 @@
+import QuizCreator from "@/components/form-elements/quizCreator";
 import JoinGameForm from "@/components/joinGameForm";
 
 export default function Home() {
   return (
-    <main style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "85vh" }}>
-        <JoinGameForm />
+    <main
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "85vh",
+      }}
+    >
+      <JoinGameForm />
     </main>
   );
 }
