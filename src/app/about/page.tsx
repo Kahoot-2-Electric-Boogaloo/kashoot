@@ -17,7 +17,7 @@ const AboutPage: React.FC = () => {
                 </p>
                 <p className="text-lg text-white mb-6">
                     Our goal with this project was to recreate the fun and interactive learning environment that Kahoot provides,
-                    allowing users to create and participate in quizzes on various topics, Our tech stack was comprised of Firebase, Next.js and a lot of memes.
+                    allowing users to create and participate in quizzes on various topics, Our tech stack was comprised of Firebase, Next.js, Tailwind css and a lot of memes.
                 </p>
                 <p className="text-lg text-white">
                     We hope you enjoy using our application as much as we enjoyed building it!
