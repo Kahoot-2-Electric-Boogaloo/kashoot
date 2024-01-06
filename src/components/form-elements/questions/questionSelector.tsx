@@ -4,6 +4,7 @@ import MultipleChoiceQuestion, {
   MultipleChoiceQuestionData,
 } from "./multipleChoiceQuestion";
 import TextInputQuestion, { TextInputQuestionData } from "./textInputQuestion";
+import { IoClose } from "react-icons/io5";
 
 export interface DataWithIndex {
   index: number;
@@ -58,7 +59,7 @@ export default function QuizSelector(props: QuizSelectorProps) {
   };
 
   return (
-    <div className='flex flex-col gap-2 bg-background-alt rounded-md p-2 w-10/12'>
+    <div className='flex flex-col relative gap-2 bg-background-alt rounded-md p-2 w-10/12'>
       <label className='font-semibold text-xl'>Question Type:</label>
       <select
         name='qType'
@@ -79,7 +80,10 @@ export default function QuizSelector(props: QuizSelectorProps) {
       ) : (
         <TextInputQuestion onDataChange={handleDataFromChild} />
       )}
-      <button onClick={() => props.onDelete(props.id)}>Delete Question</button>
+      <IoClose
+        onClick={() => props.onDelete(props.id)}
+        className='absolute top-1 right-1 w-8 h-8'
+      />
     </div>
   );
 }

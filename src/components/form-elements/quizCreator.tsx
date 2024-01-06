@@ -5,19 +5,10 @@ import { TrueFalseQuestionData } from "./questions/trueFalseQuestion";
 import { MultipleChoiceQuestionData } from "./questions/multipleChoiceQuestion";
 import { TextInputQuestionData } from "./questions/textInputQuestion";
 import { useAuth } from "@/context/AuthContext";
-import {
-  updateDoc,
-  getDoc,
-  doc,
-  setDoc,
-  collection,
-  addDoc,
-} from "firebase/firestore";
+import { setDoc, doc, collection, getDoc } from "firebase/firestore";
 import { firestore } from "@/firebase/config";
 
-interface QuizCreatorProps {}
-
-export default function QuizCreator(props: QuizCreatorProps) {
+export default function QuizCreator() {
   const [questions, setQuestions] = useState<
     Array<
       | (TrueFalseQuestionData & { id: string })
@@ -26,12 +17,14 @@ export default function QuizCreator(props: QuizCreatorProps) {
     >
   >([]);
 
-  const { user } = useAuth();
+  const [quizName, setQuizName] = useState<string>("");
   const [isSubmitting, setSubmitting] = useState<boolean>(false);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    console.log({ questions });
-  }, [questions]);
+    console.log({ questions, quizName });
+  }, [questions, quizName]);
 
   const handleDataFromChild = (newData: DataWithIndex) => {
     if ("index" in newData && "id" in newData && "data" in newData) {
@@ -66,6 +59,10 @@ export default function QuizCreator(props: QuizCreatorProps) {
     );
   };
 
+  const generateUniqueQuizId = (): string => {
+    return Math.floor((Math.random() * 100) % 10).toString();
+  };
+
   const submitQuiz = async () => {
     try {
       setSubmitting(true);
@@ -76,21 +73,30 @@ export default function QuizCreator(props: QuizCreatorProps) {
         return;
       }
 
-      // Use your user ID to create a reference to the user document
-      const userDocRef = doc(firestore, "users", user.uid);
+      // Reference to the "quizzes" collection
+      const quizzesCollectionRef = collection(firestore, "quizzes");
 
-      // Get the existing user document data
-      const userDocSnap = await getDoc(userDocRef);
-      const userData = userDocSnap.data();
+      // Generate a unique ID for the new quiz
+      let uniqueQuizId = generateUniqueQuizId();
 
-      // Create or update the 'quizzes' field with the new questions array
-      await updateDoc(userDocRef, {
-        quizzes: [...(userData?.quizzes || []), { questions }],
+      // Check if the generated ID already exists in the "quizzes" collection
+      let existingDoc = await getDoc(doc(quizzesCollectionRef, uniqueQuizId));
+      while (existingDoc.exists()) {
+        uniqueQuizId = generateUniqueQuizId();
+        existingDoc = await getDoc(doc(quizzesCollectionRef, uniqueQuizId));
+      }
+
+      // Create a new document within the "quizzes" collection
+      await setDoc(doc(quizzesCollectionRef, uniqueQuizId), {
+        userId: user.uid,
+        userName: user.displayName,
+        quizName,
+        questions,
       });
 
       console.log("Quiz submitted successfully!");
     } catch (error) {
-      // @ts-ignore
+      //@ts-ignore
       console.error("Error submitting quiz:", error.message);
     } finally {
       setSubmitting(false);
@@ -99,7 +105,16 @@ export default function QuizCreator(props: QuizCreatorProps) {
 
   return (
     <div className='flex flex-col items-center justify-center gap-4 w-4/12 bg-background rounded-md my-6 py-4'>
-      <h1 className='font-extrabold text-7xl'>Create Quiz</h1>
+      <h1 className='font-extrabold text-accent text-7xl'>Create Quiz</h1>
+      <label className='font-semibold text-xl'>Quiz Name:</label>
+      <input
+        type='text'
+        placeholder='Type your quiz name...'
+        className='bg-background border-2 border-accent rounded-sm pl-1'
+        name='quizName'
+        value={quizName}
+        onChange={(e) => setQuizName(e.target.value)}
+      />
       {questions.map((question, index) => (
         <QuestionSelector
           key={question.id}
