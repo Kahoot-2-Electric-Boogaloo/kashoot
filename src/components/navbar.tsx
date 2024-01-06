@@ -89,7 +89,7 @@ const Navbar: React.FC = () => {
             ) : (
                 <div>
                     <ul className="flex items-center justify-center">
-                        <Link className="p-2 ease-linear duration-150 hover:border flex items-center hover:bg-secondary rounded-md  cursor-pointer text-2xl" href="/all" title="ViewAllQuizes">
+                        <Link className="p-2 ease-linear duration-150 hover:border flex items-center hover:bg-secondary rounded-md  cursor-pointer text-2xl" href="/all" title="View all your quizes">
                             <FaListAlt />
                         </Link>
                         <Link className="p-2 cursor-pointer ease-linear duration-150 hover:border flex items-center hover:bg-secondary rounded-md  text-2xl" href="/create" title="Create a new quiz">
@@ -98,7 +98,7 @@ const Navbar: React.FC = () => {
                         <li className="relative" ref={dropdownRef}>
                             <button
                                 onClick={toggleDropdown}
-                                className="flex items-center p-2 ease-linear duration-150 hover:border cursor-pointer flex items-center hover:bg-secondary rounded-md  text-4xl"
+                                className="flex items-center p-2 ease-linear duration-150 hover:border cursor-pointer flex items-center hover:bg-secondary rounded-md text-4xl" title = "Menu"
                             >
                                 {user.photoURL ? (
                                     <img

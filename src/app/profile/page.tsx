@@ -124,7 +124,7 @@ const ProfilePage: React.FC = () => {
                     )}
                     <div className="bg-background w-100 p-4 rounded-md">
                         <textarea
-                            className="w-full h-40 p-2 mb-4 bg-background text-white rounded-md"
+                            className="w-full h-40 p-2 mb-4 bg-background-alt text-white rounded-md"
                             placeholder="Write a description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
