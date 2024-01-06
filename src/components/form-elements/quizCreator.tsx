@@ -5,14 +5,7 @@ import { TrueFalseQuestionData } from "./questions/trueFalseQuestion";
 import { MultipleChoiceQuestionData } from "./questions/multipleChoiceQuestion";
 import { TextInputQuestionData } from "./questions/textInputQuestion";
 import { useAuth } from "@/context/AuthContext";
-import {
-  updateDoc,
-  getDoc,
-  doc,
-  setDoc,
-  collection,
-  addDoc,
-} from "firebase/firestore";
+import { updateDoc, getDoc, doc } from "firebase/firestore";
 import { firestore } from "@/firebase/config";
 
 interface QuizCreatorProps {}
@@ -66,6 +59,12 @@ export default function QuizCreator(props: QuizCreatorProps) {
     );
   };
 
+  const generateUniqueQuizId = (): string => {
+    // Generate an 8-digit unique ID
+    const uniqueId = Math.floor(10000000 + Math.random() * 90000000).toString();
+    return uniqueId;
+  };
+
   const submitQuiz = async () => {
     try {
       setSubmitting(true);
@@ -83,9 +82,22 @@ export default function QuizCreator(props: QuizCreatorProps) {
       const userDocSnap = await getDoc(userDocRef);
       const userData = userDocSnap.data();
 
-      // Create or update the 'quizzes' field with the new questions array
+      // Check if the quizzes array exists, if not, initialize it
+      const quizzesArray = userData?.quizzes || [];
+
+      // Generate a unique ID for the new quiz
+      let uniqueQuizId = generateUniqueQuizId();
+
+      // Check if the generated ID already exists in the database
+      while (
+        quizzesArray.some((quiz: { id: string }) => quiz.id === uniqueQuizId)
+      ) {
+        uniqueQuizId = generateUniqueQuizId();
+      }
+
+      // Create or update the 'quizzes' field with the new quiz
       await updateDoc(userDocRef, {
-        quizzes: [...(userData?.quizzes || []), { questions }],
+        quizzes: [...quizzesArray, { id: uniqueQuizId, questions }],
       });
 
       console.log("Quiz submitted successfully!");
