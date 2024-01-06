@@ -1,4 +1,3 @@
-import QuizCreator from "@/components/form-elements/quizCreator";
 import JoinGameForm from "@/components/joinGameForm";
 
 export default function Home() {
