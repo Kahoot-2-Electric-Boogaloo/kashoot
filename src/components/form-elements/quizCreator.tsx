@@ -4,6 +4,16 @@ import QuestionSelector, { DataWithIndex } from "./questions/questionSelector";
 import { TrueFalseQuestionData } from "./questions/trueFalseQuestion";
 import { MultipleChoiceQuestionData } from "./questions/multipleChoiceQuestion";
 import { TextInputQuestionData } from "./questions/textInputQuestion";
+import { useAuth } from "@/context/AuthContext";
+import {
+  updateDoc,
+  getDoc,
+  doc,
+  setDoc,
+  collection,
+  addDoc,
+} from "firebase/firestore";
+import { firestore } from "@/firebase/config";
 
 interface QuizCreatorProps {}
 
@@ -16,19 +26,21 @@ export default function QuizCreator(props: QuizCreatorProps) {
     >
   >([]);
 
+  const { user } = useAuth();
+  const [isSubmitting, setSubmitting] = useState<boolean>(false);
+
   useEffect(() => {
     console.log({ questions });
   }, [questions]);
 
   const handleDataFromChild = (newData: DataWithIndex) => {
-    if ("index" in newData && "data" in newData) {
-      const { index, data } = newData;
+    if ("index" in newData && "id" in newData && "data" in newData) {
+      const { index, id, data } = newData;
       setQuestions((prevQuestions) => {
         const updatedQuestions = [...prevQuestions];
-        updatedQuestions[index] = data as
-          | (TrueFalseQuestionData & { id: string })
-          | (MultipleChoiceQuestionData & { id: string })
-          | (TextInputQuestionData & { id: string });
+        updatedQuestions[index] = { ...data, id } as TextInputQuestionData & {
+          id: string;
+        };
         return updatedQuestions;
       });
     }
@@ -48,26 +60,61 @@ export default function QuizCreator(props: QuizCreatorProps) {
     setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
   };
 
-  const deleteQuestion = (index: number) => {
+  const deleteQuestion = (id: string) => {
     setQuestions((prevQuestions) =>
-      prevQuestions.filter((_, i) => i !== index)
+      prevQuestions.filter((question) => question.id !== id)
     );
   };
 
+  const submitQuiz = async () => {
+    try {
+      setSubmitting(true);
+
+      // Check if the user is authenticated
+      if (!user) {
+        console.error("User not authenticated.");
+        return;
+      }
+
+      // Use your user ID to create a reference to the user document
+      const userDocRef = doc(firestore, "users", user.uid);
+
+      // Get the existing user document data
+      const userDocSnap = await getDoc(userDocRef);
+      const userData = userDocSnap.data();
+
+      // Create or update the 'quizzes' field with the new questions array
+      await updateDoc(userDocRef, {
+        quizzes: [...(userData?.quizzes || []), { questions }],
+      });
+
+      console.log("Quiz submitted successfully!");
+    } catch (error) {
+      // @ts-ignore
+      console.error("Error submitting quiz:", error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className='flex flex-col items-center justify-center gap-4 w-4/12 min-h-screen bg-background rounded-md p-2'>
-      <h1 className='font-extrabold text-6xl'>Create Quiz</h1>
+    <div className='flex flex-col items-center justify-center gap-4 w-4/12 bg-background rounded-md my-6 py-4'>
+      <h1 className='font-extrabold text-7xl'>Create Quiz</h1>
       {questions.map((question, index) => (
         <QuestionSelector
-          key={index}
+          key={question.id}
           index={index}
+          id={question.id}
           onDataChange={(newData) =>
-            handleDataFromChild({ index, data: newData })
+            handleDataFromChild({ index, id: question.id, data: newData })
           }
-          onDelete={deleteQuestion}
+          onDelete={() => deleteQuestion(question.id)}
         />
       ))}
       <button onClick={addQuestion}>Add Question</button>
+      <button onClick={submitQuiz} disabled={isSubmitting}>
+        {isSubmitting ? "Submitting..." : "Submit Quiz"}
+      </button>
     </div>
   );
 }
