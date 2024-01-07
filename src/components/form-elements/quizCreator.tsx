@@ -60,7 +60,8 @@ export default function QuizCreator() {
   };
 
   const generateUniqueQuizId = (): string => {
-    return Math.floor((Math.random() * 100) % 10).toString();
+    const random8DigitNumber = Math.floor(10000000 + Math.random() * 90000000);
+    return random8DigitNumber.toString();
   };
 
   const submitQuiz = async () => {

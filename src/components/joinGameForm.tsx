@@ -1,23 +1,23 @@
-"use client"
-import Link from 'next/link';
-import { ChangeEvent, useState } from 'react';
+"use client";
+import Link from "next/link";
+import { ChangeEvent, useState } from "react";
 
 export default function JoinGameForm() {
-    const [gamePin, setGamePin] = useState<string>('');
+  const [gamePin, setGamePin] = useState<string>("");
 
-    return (
-        <div>
-            <h1 className='w-64 select-none text-center font-extrabold text-6xl'>
-                Kashoot
-            </h1>
-            <form className='grid grid-rows-2 gap-4 p-2 justify-center w-64 h-32 bg-background rounded-md'>
-                <input
-                    onChange={(e) => setGamePin(e.target.value)}
-                    value={gamePin}
-                    type='text'
-                    maxLength={8}
-                    placeholder='Game PIN'
-                    className='block text-center
+  return (
+    <div>
+      <h1 className='w-64 select-none text-center font-extrabold text-6xl'>
+        Kashoot
+      </h1>
+      <form className='grid grid-rows-2 gap-4 p-2 justify-center w-64 h-32 bg-background rounded-md'>
+        <input
+          onChange={(e) => setGamePin(e.target.value)}
+          value={gamePin}
+          type='text'
+          maxLength={8}
+          placeholder='Game PIN'
+          className='block text-center
                     border-2
                     border-white
                     border-solid
@@ -28,8 +28,10 @@ export default function JoinGameForm() {
                     focus:border-accent
                     transition duration-[100] ease-in-out
                     '
-                />
-                <Link href={`/game/${gamePin}`} className='bg-background-alt
+        />
+        <Link
+          href={`/quiz/${gamePin}`}
+          className='bg-background-alt
                     rounded-md
                     outline-none
                     shadow-[0_3px_0px_0px_rgba(255,255,255)]
@@ -43,10 +45,11 @@ export default function JoinGameForm() {
                     text-center
                     justify-center
                     p-3
-                '>
-                        Enter
-                </Link>
-            </form>
-        </div>
-    );
+                '
+        >
+          Enter
+        </Link>
+      </form>
+    </div>
+  );
 }
