@@ -60,6 +60,9 @@ export default function QuizSelector(props: QuizSelectorProps) {
 
   return (
     <div className='flex flex-col relative gap-2 bg-background-alt rounded-md p-2 w-10/12'>
+      <h1 className='absolute left-[-1.5rem] text-xl font-bold'>
+        {props.index}.
+      </h1>
       <label className='font-semibold text-xl'>Question Type:</label>
       <select
         name='qType'
@@ -82,7 +85,7 @@ export default function QuizSelector(props: QuizSelectorProps) {
       )}
       <IoClose
         onClick={() => props.onDelete(props.id)}
-        className='absolute top-1 right-1 w-8 h-8'
+        className='absolute top-1 right-1 w-8 h-8 hover:text-red-400 duration-150 cursor-pointer'
       />
     </div>
   );

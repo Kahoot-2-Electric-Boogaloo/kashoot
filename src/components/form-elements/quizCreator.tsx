@@ -7,6 +7,8 @@ import { TextInputQuestionData } from "./questions/textInputQuestion";
 import { useAuth } from "@/context/AuthContext";
 import { setDoc, doc, collection, getDoc } from "firebase/firestore";
 import { firestore } from "@/firebase/config";
+import { FaLocationArrow } from "react-icons/fa";
+import { IoMdAddCircle } from "react-icons/io";
 
 export default function QuizCreator() {
   const [questions, setQuestions] = useState<
@@ -23,6 +25,9 @@ export default function QuizCreator() {
   const [quizCode, setQuizCode] = useState<string | null>(null);
 
   const { user } = useAuth();
+
+  const textInputStyle =
+    "bg-background border-2 border-accent rounded-sm pl-1 hover:bg-gray-800 duration-150 focus:bg-gray-800";
 
   useEffect(() => {
     console.log({ questions, quizName });
@@ -149,7 +154,7 @@ export default function QuizCreator() {
       <input
         type='text'
         placeholder='Type your quiz name...'
-        className='bg-background-alt border-2 border-accent rounded-sm pl-1'
+        className={textInputStyle}
         name='quizName'
         value={quizName}
         onChange={(e) => setQuizName(e.target.value)}
@@ -165,10 +170,23 @@ export default function QuizCreator() {
           onDelete={() => deleteQuestion(question.id)}
         />
       ))}
-      <button onClick={addQuestion}>Add Question</button>
-      <button onClick={submitQuiz} disabled={isSubmitting}>
-        {isSubmitting ? "Submitting..." : "Submit Quiz"}
-      </button>
+      <div className='flex items-center justify-center gap-8'>
+        <button
+          className='flex items-center justify-center gap-1 text-lg w-16 bg-green-500 rounded-md border-white border-[1px] hover:bg-green-300 hover:text-slate-400 active:scale-95 duration-150'
+          onClick={addQuestion}
+        >
+          <IoMdAddCircle />
+          Add
+        </button>
+        <button
+          className='flex items-center justify-center gap-1 text-lg w-24 bg-secondary rounded-md border-white border-[1px] hover:bg-orange-200 hover:text-slate-400 active:scale-95 duration-150'
+          onClick={submitQuiz}
+          disabled={isSubmitting}
+        >
+          <FaLocationArrow />
+          {isSubmitting ? "Submitting..." : "Submit"}
+        </button>
+      </div>
     </div>
   );
 }
