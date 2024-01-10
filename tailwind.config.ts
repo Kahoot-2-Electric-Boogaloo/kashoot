@@ -15,6 +15,7 @@ const config: Config = {
       },
     },
     colors: {
+      ...require('tailwindcss/colors'),
       'text': '#f7ebe8',
       'text-alt': '#1e1e24',
       'background': '#1e1e24',

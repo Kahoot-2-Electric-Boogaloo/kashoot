@@ -47,7 +47,7 @@ export default function MultipleChoiceDisplay(
           {props.option3}
         </button>
         <button
-          className={`bg-[#6796c8] ${buttonClassName}`}
+          className={`bg-blue-400 ${buttonClassName}`}
           style={{ minHeight: "5rem" }}
           onClick={() => handleAnswerSubmit(4)}
         >

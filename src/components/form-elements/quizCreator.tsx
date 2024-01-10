@@ -19,6 +19,8 @@ export default function QuizCreator() {
 
   const [quizName, setQuizName] = useState<string>("");
   const [isSubmitting, setSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [quizCode, setQuizCode] = useState<string | null>(null);
 
   const { user } = useAuth();
 
@@ -68,34 +70,58 @@ export default function QuizCreator() {
     try {
       setSubmitting(true);
 
-      // Check if the user is authenticated
-      if (!user) {
-        console.error("User not authenticated.");
-        return;
+      if (!quizName || questions.length === 0) {
+        setError("Quiz name and at least one question are required.");
+
+        // Hide the error div after 3 seconds
+        setTimeout(() => {
+          setError(null);
+        }, 3000);
+      } else if (
+        questions.some(
+          (q) =>
+            !q.qType ||
+            !q.qData ||
+            !Object.values(q.qData).every((value) => value)
+        )
+      ) {
+        setError("All questions should be filled in before submitting.");
+
+        // Hide the error div after 3 seconds
+        setTimeout(() => {
+          setError(null);
+        }, 3000);
+      } else {
+        // Check if the user is authenticated
+        if (!user) {
+          console.error("User not authenticated.");
+          return;
+        }
+
+        // Reference to the "quizzes" collection
+        const quizzesCollectionRef = collection(firestore, "quizzes");
+
+        // Generate a unique ID for the new quiz
+        let uniqueQuizId = generateUniqueQuizId();
+
+        // Check if the generated ID already exists in the "quizzes" collection
+        let existingDoc = await getDoc(doc(quizzesCollectionRef, uniqueQuizId));
+        while (existingDoc.exists()) {
+          uniqueQuizId = generateUniqueQuizId();
+          existingDoc = await getDoc(doc(quizzesCollectionRef, uniqueQuizId));
+        }
+
+        // Create a new document within the "quizzes" collection
+        await setDoc(doc(quizzesCollectionRef, uniqueQuizId), {
+          userId: user.uid,
+          userName: user.displayName,
+          quizName,
+          questions,
+        });
+
+        console.log("Quiz submitted successfully!");
+        setQuizCode(uniqueQuizId);
       }
-
-      // Reference to the "quizzes" collection
-      const quizzesCollectionRef = collection(firestore, "quizzes");
-
-      // Generate a unique ID for the new quiz
-      let uniqueQuizId = generateUniqueQuizId();
-
-      // Check if the generated ID already exists in the "quizzes" collection
-      let existingDoc = await getDoc(doc(quizzesCollectionRef, uniqueQuizId));
-      while (existingDoc.exists()) {
-        uniqueQuizId = generateUniqueQuizId();
-        existingDoc = await getDoc(doc(quizzesCollectionRef, uniqueQuizId));
-      }
-
-      // Create a new document within the "quizzes" collection
-      await setDoc(doc(quizzesCollectionRef, uniqueQuizId), {
-        userId: user.uid,
-        userName: user.displayName,
-        quizName,
-        questions,
-      });
-
-      console.log("Quiz submitted successfully!");
     } catch (error) {
       //@ts-ignore
       console.error("Error submitting quiz:", error.message);
@@ -106,12 +132,24 @@ export default function QuizCreator() {
 
   return (
     <div className='flex flex-col items-center justify-center gap-4 w-4/12 bg-background rounded-md my-6 py-4'>
-      <h1 className='font-extrabold text-accent text-7xl'>Create Quiz</h1>
+      {error && (
+        <div className='bg-red-400 text-white p-2 rounded-md absolute top-5 font-bold'>
+          {error}
+        </div>
+      )}
+      {quizCode && (
+        <div className='bg-green-500 text-white p-2 rounded-md'>
+          Quiz Code: {quizCode}
+        </div>
+      )}
+      <h1 className='font-extrabold text-accent text-7xl select-none'>
+        Create Quiz
+      </h1>
       <label className='font-semibold text-xl'>Quiz Name:</label>
       <input
         type='text'
         placeholder='Type your quiz name...'
-        className='bg-background border-2 border-accent rounded-sm pl-1'
+        className='bg-background-alt border-2 border-accent rounded-sm pl-1'
         name='quizName'
         value={quizName}
         onChange={(e) => setQuizName(e.target.value)}

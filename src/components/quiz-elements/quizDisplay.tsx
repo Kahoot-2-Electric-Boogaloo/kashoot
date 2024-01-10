@@ -57,12 +57,10 @@ export default function QuizDisplay(props: QuizDisplayProps) {
   const [userAnswers, setUserAnswers] = useState<
     Array<number | string | boolean>
   >([]);
-
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
-
   const [feedback, setFeedback] = useState<string | null>(null);
-
   const [correctAnswersCount, setCorrectAnswersCount] = useState<number>(0);
+  const [isInputEnabled, setIsInputEnabled] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchQuiz = async () => {
@@ -92,6 +90,10 @@ export default function QuizDisplay(props: QuizDisplayProps) {
   }, [props.quizID]);
 
   const handleAnswer = (answer: number | string | boolean) => {
+    if (!isInputEnabled) {
+      return; // Do nothing if input is disabled
+    }
+
     const currentQuestion = quizData.questions[currentQuestionIndex].qData;
     const correctAnswer = currentQuestion.answer;
 
@@ -124,10 +126,13 @@ export default function QuizDisplay(props: QuizDisplayProps) {
     }
 
     setFeedback(isCorrect ? "Correct!" : "Wrong!");
+    setIsInputEnabled(false); // Disable input
 
     setTimeout(() => {
       setFeedback(null);
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      setUserAnswers([]); // Clear user answers
+      setIsInputEnabled(true); // Enable input for the next question
     }, 1500);
   };
 
@@ -141,14 +146,25 @@ export default function QuizDisplay(props: QuizDisplayProps) {
           currentQuestionIndex < quizData.questions.length ? (
             <>
               {feedback && (
-                <p
+                <div
                   className={
-                    feedback === "Correct!" ? "text-green-500" : "text-red-500"
+                    "flex items-center justify-center rounded-md border-white border-2 w-48 h-12 text-3xl font-semibold text-center text-text absolute bottom-16 left-16 animate-bounce " +
+                    (feedback === "Correct!" ? "bg-green-500" : "bg-red-400")
                   }
                 >
                   {feedback}
-                </p>
+                  <div
+                    className={
+                      "absolute inset-0 rounded-md ring-4 " +
+                      (feedback === "Correct!"
+                        ? "ring-green-300"
+                        : "ring-red-300") +
+                      " filter blur-md"
+                    }
+                  ></div>
+                </div>
               )}
+
               {quizData.questions[currentQuestionIndex].qType ===
               "trueOrFalse" ? (
                 <TrueFalseDisplay
@@ -187,12 +203,24 @@ export default function QuizDisplay(props: QuizDisplayProps) {
               )}
             </>
           ) : (
-            <div>
-              <p>Well Done</p>
-              <p>
-                You answered {correctAnswersCount} out of{" "}
-                {quizData.questions.length} questions correctly.
+            <div className='flex items-center justify-center flex-col w-[100%] h-[100%]'>
+              <h1 className='text-text text-5xl font-bold'>Well Done!</h1>
+              <p className='text-text text-xl'>
+                You answered{" "}
+                <strong>
+                  {correctAnswersCount}/{quizData.questions.length}
+                </strong>{" "}
+                questions correctly.
               </p>
+              <button
+                onClick={() => {
+                  window.location.href = "/";
+                }}
+                className='mt-4 px-6 py-2 bg-primary text-text transition-transform transform hover:scale-105 focus:outline-none
+                rounded-md font-semibold text-xl border-solid hover:border-2 hover:brightness-[1.2] active:scale-[.97] duration-75 ease-linear'
+              >
+                Go to Homepage
+              </button>
             </div>
           )
         ) : (

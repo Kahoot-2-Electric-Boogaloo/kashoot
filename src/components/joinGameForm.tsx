@@ -6,11 +6,11 @@ export default function JoinGameForm() {
   const [gamePin, setGamePin] = useState<string>("");
 
   return (
-    <div>
+    <div className='scale-[1.8]'>
       <h1 className='w-64 select-none text-center font-extrabold text-6xl'>
         Kashoot
       </h1>
-      <form className='grid grid-rows-2 gap-4 p-2 justify-center w-64 h-32 bg-background rounded-md'>
+      <div className='grid grid-rows-2 gap-4 p-2 justify-center w-64 h-32 bg-background rounded-md'>
         <input
           onChange={(e) => setGamePin(e.target.value)}
           value={gamePin}
@@ -49,7 +49,7 @@ export default function JoinGameForm() {
         >
           Enter
         </Link>
-      </form>
+      </div>
     </div>
   );
 }
