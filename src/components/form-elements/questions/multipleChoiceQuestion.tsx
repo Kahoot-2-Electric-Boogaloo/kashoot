@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { text } from "stream/consumers";
 
 export interface MultipleChoiceQuestionData {
   qType: string;
@@ -30,6 +31,9 @@ export default function MultipleChoiceQuestion(
       answer: 1,
     },
   });
+
+  const textInputStyle =
+    "bg-background border-2 border-accent rounded-sm pl-1 hover:bg-gray-800 duration-150 focus:bg-gray-800";
 
   useEffect(() => {
     props.onDataChange(data);
@@ -68,7 +72,7 @@ export default function MultipleChoiceQuestion(
       <input
         type='text'
         placeholder='Type your question...'
-        className='bg-background border-2 border-accent rounded-sm pl-1'
+        className={textInputStyle}
         name='content'
         value={data.qData.content}
         onChange={handleInputChange}
@@ -77,7 +81,7 @@ export default function MultipleChoiceQuestion(
       <input
         type='text'
         placeholder='Type your question...'
-        className='bg-background border-2 border-accent rounded-sm pl-1'
+        className={textInputStyle}
         name='option1'
         value={data.qData.option1}
         onChange={handleInputChange}
@@ -86,7 +90,7 @@ export default function MultipleChoiceQuestion(
       <input
         type='text'
         placeholder='Type your question...'
-        className='bg-background border-2 border-accent rounded-sm pl-1'
+        className={textInputStyle}
         name='option2'
         value={data.qData.option2}
         onChange={handleInputChange}
@@ -95,7 +99,7 @@ export default function MultipleChoiceQuestion(
       <input
         type='text'
         placeholder='Type your question...'
-        className='bg-background border-2 border-accent rounded-sm pl-1'
+        className={textInputStyle}
         name='option3'
         value={data.qData.option3}
         onChange={handleInputChange}
@@ -104,7 +108,7 @@ export default function MultipleChoiceQuestion(
       <input
         type='text'
         placeholder='Type your question...'
-        className='bg-background border-2 border-accent rounded-sm pl-1'
+        className={textInputStyle}
         name='option4'
         value={data.qData.option4}
         onChange={handleInputChange}

@@ -19,6 +19,9 @@ export default function TrueFalseQuestion(props: TrueFalseQuestionProps) {
     answer: true,
   });
 
+  const textInputStyle =
+    "bg-background border-2 border-accent rounded-sm pl-1 hover:bg-gray-800 duration-150 focus:bg-gray-800";
+
   useEffect(() => {
     props.onDataChange({ qType, qData });
   }, [qType, qData]);
@@ -47,7 +50,7 @@ export default function TrueFalseQuestion(props: TrueFalseQuestionProps) {
       <input
         type='text'
         placeholder='Type your question...'
-        className='bg-background border-2 border-accent rounded-sm pl-1'
+        className={textInputStyle}
         name='content'
         value={qData.content}
         onChange={handleInputChange}
