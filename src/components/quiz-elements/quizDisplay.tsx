@@ -1,3 +1,4 @@
+"use client";
 import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import TextInputDisplay from "./questions-display/textInputDisplay";
@@ -180,15 +181,19 @@ export default function QuizDisplay(props: QuizDisplayProps) {
                     quizData.questions[currentQuestionIndex].qData.content
                   }
                   option1={
+                    // @ts-ignore
                     quizData.questions[currentQuestionIndex].qData.option1
                   }
                   option2={
+                    // @ts-ignore
                     quizData.questions[currentQuestionIndex].qData.option2
                   }
                   option3={
+                    // @ts-ignore
                     quizData.questions[currentQuestionIndex].qData.option3
                   }
                   option4={
+                    // @ts-ignore
                     quizData.questions[currentQuestionIndex].qData.option4
                   }
                   onAnswerSubmit={handleAnswer}
