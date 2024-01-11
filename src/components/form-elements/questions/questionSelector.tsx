@@ -61,7 +61,7 @@ export default function QuizSelector(props: QuizSelectorProps) {
   return (
     <div className='flex flex-col relative gap-2 bg-background-alt rounded-md p-2 w-10/12'>
       <h1 className='absolute left-[-1.5rem] text-xl font-bold'>
-        {props.index}.
+        {props.index + 1}.
       </h1>
       <label className='font-semibold text-xl'>Question Type:</label>
       <select

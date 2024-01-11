@@ -136,57 +136,71 @@ export default function QuizCreator() {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center gap-4 w-4/12 bg-background rounded-md my-6 py-4'>
+    <div className='flex flex-col items-center justify-center gap-4 w-4/12 min-h-[32rem] bg-background rounded-md my-6 py-4'>
       {error && (
-        <div className='bg-red-400 text-white p-2 rounded-md absolute top-5 font-bold'>
+        <div className='bg-red-400 text-white p-2 rounded-md absolute top-5 font-bold animate-bounce'>
           {error}
         </div>
       )}
-      {quizCode && (
-        <div className='bg-green-500 text-white p-2 rounded-md'>
-          Quiz Code: {quizCode}
+      {quizCode ? (
+        <div className='flex items-center justify-center flex-col'>
+          <div className='bg-green-500 text-white p-2 rounded-md text-4xl font-bold border-white border-2'>
+            Quiz Code: {quizCode}
+          </div>
+          <button
+            onClick={() => {
+              window.location.href = "/";
+            }}
+            className='mt-4 px-6 py-2 bg-primary text-text transition-transform transform hover:scale-105 focus:outline-none
+                rounded-md font-semibold text-xl border-solid hover:border-2 hover:brightness-[1.2] active:scale-[.97] duration-75 ease-linear'
+          >
+            Go to Homepage
+          </button>
+        </div>
+      ) : (
+        <div className='flex flex-col items-center justify-center gap-4'>
+          <h1 className='font-extrabold text-accent text-7xl select-none'>
+            Create Quiz
+          </h1>
+          <label className='font-semibold text-xl'>Quiz Name:</label>
+          <input
+            type='text'
+            placeholder='Type your quiz name...'
+            className={textInputStyle}
+            name='quizName'
+            value={quizName}
+            onChange={(e) => setQuizName(e.target.value)}
+          />
+          {questions.map((question, index) => (
+            <QuestionSelector
+              key={question.id}
+              index={index}
+              id={question.id}
+              onDataChange={(newData) =>
+                handleDataFromChild({ index, id: question.id, data: newData })
+              }
+              onDelete={() => deleteQuestion(question.id)}
+            />
+          ))}
+          <div className='flex items-center justify-center gap-8'>
+            <button
+              className='flex items-center justify-center gap-1 text-lg w-16 bg-green-500 rounded-md border-white border-[1px] hover:bg-green-300 hover:text-slate-400 hover:scale-105 active:scale-95 duration-150'
+              onClick={addQuestion}
+            >
+              <IoMdAddCircle />
+              Add
+            </button>
+            <button
+              className='flex items-center justify-center gap-1 text-lg w-24 bg-secondary rounded-md border-white border-[1px] hover:bg-orange-200 hover:text-slate-400 hover:scale-105 active:scale-95 duration-150'
+              onClick={submitQuiz}
+              disabled={isSubmitting}
+            >
+              <FaLocationArrow />
+              {isSubmitting ? "Submitting..." : "Submit"}
+            </button>
+          </div>
         </div>
       )}
-      <h1 className='font-extrabold text-accent text-7xl select-none'>
-        Create Quiz
-      </h1>
-      <label className='font-semibold text-xl'>Quiz Name:</label>
-      <input
-        type='text'
-        placeholder='Type your quiz name...'
-        className={textInputStyle}
-        name='quizName'
-        value={quizName}
-        onChange={(e) => setQuizName(e.target.value)}
-      />
-      {questions.map((question, index) => (
-        <QuestionSelector
-          key={question.id}
-          index={index}
-          id={question.id}
-          onDataChange={(newData) =>
-            handleDataFromChild({ index, id: question.id, data: newData })
-          }
-          onDelete={() => deleteQuestion(question.id)}
-        />
-      ))}
-      <div className='flex items-center justify-center gap-8'>
-        <button
-          className='flex items-center justify-center gap-1 text-lg w-16 bg-green-500 rounded-md border-white border-[1px] hover:bg-green-300 hover:text-slate-400 active:scale-95 duration-150'
-          onClick={addQuestion}
-        >
-          <IoMdAddCircle />
-          Add
-        </button>
-        <button
-          className='flex items-center justify-center gap-1 text-lg w-24 bg-secondary rounded-md border-white border-[1px] hover:bg-orange-200 hover:text-slate-400 active:scale-95 duration-150'
-          onClick={submitQuiz}
-          disabled={isSubmitting}
-        >
-          <FaLocationArrow />
-          {isSubmitting ? "Submitting..." : "Submit"}
-        </button>
-      </div>
     </div>
   );
 }

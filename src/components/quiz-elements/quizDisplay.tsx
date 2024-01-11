@@ -170,6 +170,8 @@ export default function QuizDisplay(props: QuizDisplayProps) {
               "trueOrFalse" ? (
                 <TrueFalseDisplay
                   content={
+                    (currentQuestionIndex + 1).toString() +
+                    ". " +
                     quizData.questions[currentQuestionIndex].qData.content
                   }
                   onAnswerSubmit={handleAnswer}
@@ -178,6 +180,8 @@ export default function QuizDisplay(props: QuizDisplayProps) {
                 "multipleChoice" ? (
                 <MultipleChoiceDisplay
                   content={
+                    (currentQuestionIndex + 1).toString() +
+                    ". " +
                     quizData.questions[currentQuestionIndex].qData.content
                   }
                   option1={
@@ -201,6 +205,8 @@ export default function QuizDisplay(props: QuizDisplayProps) {
               ) : (
                 <TextInputDisplay
                   content={
+                    (currentQuestionIndex + 1).toString() +
+                    ". " +
                     quizData.questions[currentQuestionIndex].qData.content
                   }
                   onAnswerSubmit={handleAnswer}
